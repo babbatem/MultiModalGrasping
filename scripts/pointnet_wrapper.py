@@ -15,18 +15,18 @@ class PointNet:
         bn_init_decay, bn_decay_decay_step, bn_decay_decay_rate, bn_decay_clip, decay_learning_rate=False, num_labels=1):
 
         print("PARAMS:")
-        print("batch_size", batch_size)
-        print("min_num_points", min_num_points)
-        print("num_pointcloud_channels", num_pointcloud_channels)
-        print("base_learning_rate", base_learning_rate)
-        print("decay_step", decay_step)
-        print("decay_rate", decay_rate)
-        print("bn_init_decay", bn_init_decay)
-        print("bn_decay_decay_step", bn_decay_decay_step)
-        print("bn_decay_decay_rate", bn_decay_decay_rate)
-        print("bn_decay_clip", bn_decay_clip)
-        print("decay_learning_rate", decay_learning_rate)
-        print("num_labels", num_labels)
+        print(("batch_size", batch_size))
+        print(("min_num_points", min_num_points))
+        print(("num_pointcloud_channels", num_pointcloud_channels))
+        print(("base_learning_rate", base_learning_rate))
+        print(("decay_step", decay_step))
+        print(("decay_rate", decay_rate))
+        print(("bn_init_decay", bn_init_decay))
+        print(("bn_decay_decay_step", bn_decay_decay_step))
+        print(("bn_decay_decay_rate", bn_decay_decay_rate))
+        print(("bn_decay_clip", bn_decay_clip))
+        print(("decay_learning_rate", decay_learning_rate))
+        print(("num_labels", num_labels))
 
         self.batch_size = batch_size
         self.min_num_points = min_num_points

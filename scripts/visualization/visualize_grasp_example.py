@@ -74,7 +74,7 @@ if __name__ == '__main__':
 
     np_cloud_sampled_cropped = data_preparer.cloud_loader.NUMPY_readSample([cloud_1_filepath, cloud_2_filepath], [cloud_1_indices, cloud_2_indices])
     np_cloud_full = data_preparer.cloud_loader.NUMPY_read([cloud_1_filepath, cloud_2_filepath])
-    print("Loaded sampled cloud of shape", np_cloud_sampled_cropped.shape, "and full cloud of shape", np_cloud_full.shape)
+    print(("Loaded sampled cloud of shape", np_cloud_sampled_cropped.shape, "and full cloud of shape", np_cloud_full.shape))
 
     transformed_cloud_np = data_preparer.cloud_loader.NUMPY_transformCloud(np_cloud_sampled_cropped, float_handpose)
 
