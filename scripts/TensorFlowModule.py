@@ -22,8 +22,8 @@ class TensorFlowModule(DeepLearningModule):
         num_labels = 5 if label_to_train_with=="all" else (2 if label_to_train_with=="basic_both" else 1)
         super(TensorFlowModule, self).__init__(train_data_paths, train_labels, test_data_paths, test_labels, output_path, num_labels)
 
-        print "Using TensorFlow", tf.__version__
-        print "GPU Available:", tf.test.is_gpu_available()
+        print("Using TensorFlow", tf.__version__)
+        print("GPU Available:", tf.test.is_gpu_available())
 
         self.learning_rate = learning_rate
         self.batch_size = batch_size
@@ -64,11 +64,11 @@ class TensorFlowModule(DeepLearningModule):
         self.train_ds = self.train_ds.batch(self.batch_size).prefetch(25)
         self.test_ds = self.test_ds.batch(self.batch_size).prefetch(25)
 
-        print "Created tf.Dataset from paths, overall runtime so far is", (time.time()-data_read_start_time)/60, "minutes."
+        print("Created tf.Dataset from paths, overall runtime so far is", (time.time()-data_read_start_time)/60, "minutes.")
         self.data_processing_time = (time.time() - data_read_start_time)/60
 
         ################################################ NET AND SESSION ###############################################
-        print "Creating net"
+        print("Creating net")
         decay_step = 200000
         decay_rate = 0.7
         bn_init_decay = 0.5
@@ -103,7 +103,7 @@ class TensorFlowModule(DeepLearningModule):
         test_init_op = self.test_iter.make_initializer(self.test_ds)
         self.session.run(test_init_op)
 
-        print "TensorFlow Learner created."
+        print("TensorFlow Learner created.")
 
         total_parameters = 0
         for variable in tf.trainable_variables():
@@ -113,7 +113,7 @@ class TensorFlowModule(DeepLearningModule):
             for dim in shape:
                 variable_parameters *= dim.value
             total_parameters += variable_parameters
-        print "Total number of trainable parameters in the network:", total_parameters
+        print("Total number of trainable parameters in the network:", total_parameters)
 
     ################################################# EPOCH-LEVEL EVAL #################################################
     def train_epoch(self):
@@ -170,7 +170,7 @@ class TensorFlowModule(DeepLearningModule):
         epoch_test_time = (time.time()-test_epoch_start_time)/60
         epoch_gather_time = time_gathering/60
         epoch_run_time = time_running/60
-        print "Epoch", len(self.train_loss_per_epoch), "testing time", epoch_test_time, "min total for", len(test_label_probs), "examples.", epoch_gather_time, "to gather data,", epoch_run_time, "to pass through net."
+        print("Epoch", len(self.train_loss_per_epoch), "testing time", epoch_test_time, "min total for", len(test_label_probs), "examples.", epoch_gather_time, "to gather data,", epoch_run_time, "to pass through net.")
         self.test_time_per_epoch.append(epoch_test_time)
 
         self.latest_test_net_prob_out = test_label_probs

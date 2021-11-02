@@ -110,7 +110,7 @@ def read_multimodal_label_files(data_path):
     for obj in objects:
         label_dir = data_path + '/' + obj + "/labels"
         if not os.path.isdir(label_dir):
-            print("COULD NOT FIND", label_dir)
+            print(("COULD NOT FIND", label_dir))
             continue
         # Based on expected BigBIRD dataset structure
         for cam in range(6)[1:]:
@@ -156,11 +156,11 @@ def drakeFilepath2datasetpaths(dir_path, calibrated_bigbird_cloud_dir, \
             elif key[0] in test_objs:
                 test_dict_keys.append(key)
             else:
-                print("Object is somehow neither in training or testing set:", key[0])
+                print(("Object is somehow neither in training or testing set:", key[0]))
                 sys.exit()
     else:
         # Don't select obj+cam pairs to use for train test, select 85/15 across the whole set
-        label_dict_keys = obj_label_dict.keys()
+        label_dict_keys = list(obj_label_dict.keys())
         shuffle_list_with_seed(label_dict_keys, random_seed)
         train_dict_keys, test_dict_keys = train_test_split(label_dict_keys, percent_train)
 
@@ -279,14 +279,14 @@ if __name__ == '__main__':
 
     # Make sure each example has a label
     if (len(train_data_paths) != len(train_labels)):
-        print(len(train_data_paths), "training paths and", len(train_labels), "labels")
+        print((len(train_data_paths), "training paths and", len(train_labels), "labels"))
         sys.exit()
     if (len(test_data_paths) != len(test_labels)):
-        print(len(test_data_paths), "testing paths and", len(test_labels), "labels")
+        print((len(test_data_paths), "testing paths and", len(test_labels), "labels"))
         sys.exit()
 
-    print("Arranged filenames and labels in", (time.time() - data_read_start_time)/60, "minutes.")
-    print("NOW TRAINING WITH", len(train_labels), "TRAINING EXAMPLES AND", len(test_labels), "TEST EXAMPLES.")
+    print(("Arranged filenames and labels in", (time.time() - data_read_start_time)/60, "minutes."))
+    print(("NOW TRAINING WITH", len(train_labels), "TRAINING EXAMPLES AND", len(test_labels), "TEST EXAMPLES."))
 
     learner = TensorFlowModule(train_data_paths, train_labels, test_data_paths, test_labels, args.learning_rate, \
         args.batch_size, timestamped_output_directory, args.pointcloud_size, args.num_epochs, \
@@ -298,4 +298,4 @@ if __name__ == '__main__':
         learner.test_epoch()
         learner.update_plots()
 
-        print("Epoch {} in {} minutes.".format(epoch, (time.time() - epoch_start_time)/60))
+        print(("Epoch {} in {} minutes.".format(epoch, (time.time() - epoch_start_time)/60)))

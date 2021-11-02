@@ -162,7 +162,7 @@ class DeepLearningModule(object):
         self.train_acc_per_epoch.append(epoch_acc)
         self.train_pos_acc_per_epoch.append(pos_acc)
         self.train_neg_acc_per_epoch.append(neg_acc)
-        print "Latest train accuracy:", epoch_acc
+        print("Latest train accuracy:", epoch_acc)
         self.train_acc_txt_file = open(self.train_acc_txt_filename, 'a')
         if self.num_labels > 1:
             epoch_acc_str = ""
@@ -192,23 +192,23 @@ class DeepLearningModule(object):
             return [prec, rec, f1]
 
         if len(self.test_labels) != len(self.RM_latest_test_labels):
-            print "Something is seriously wrong, different number of test grasp labels."
+            print("Something is seriously wrong, different number of test grasp labels.")
         else:
             num_off = 0
             for i in range(len(self.test_labels)):
                 if self.test_labels[i] != self.RM_latest_test_labels[i]:
                     num_off += 1
-            print "Labels off by", num_off, "of", len(self.test_labels)
+            print("Labels off by", num_off, "of", len(self.test_labels))
         if self.test_labels != self.RM_latest_test_labels:
-            print "GRASP LABEL VECTORS ARE NOT THE SAME", len(self.test_labels), len(self.RM_latest_test_labels), self.test_labels[0], self.RM_latest_test_labels[0], self.test_labels[-1], self.RM_latest_test_labels[-1]
+            print("GRASP LABEL VECTORS ARE NOT THE SAME", len(self.test_labels), len(self.RM_latest_test_labels), self.test_labels[0], self.RM_latest_test_labels[0], self.test_labels[-1], self.RM_latest_test_labels[-1])
         else:
-            print "Grasp label vectors are equal, both of size", len(self.test_labels)
+            print("Grasp label vectors are equal, both of size", len(self.test_labels))
 
         epoch_acc, pos_acc, neg_acc = None, None, None
         if self.num_labels > 1:
             epoch_acc, pos_acc, neg_acc = [], [], []
             tot_prec, tot_rec, tot_f1 = 0.0, 0.0, 0.0
-            print "Grasp type prec, rec, f1:",
+            print("Grasp type prec, rec, f1:", end=' ')
             for grasp_type_i in range(len(self.test_labels[0])):
                 type_test_labels = [type_label[grasp_type_i] for type_label in self.test_labels]
                 type_latest_test_net_prob_out = [type_output[grasp_type_i] for type_output in self.latest_test_net_prob_out]
@@ -218,21 +218,21 @@ class DeepLearningModule(object):
                 neg_acc.append(type_neg_acc)
 
                 prec, rec, f1 = compute_precision_recall_f1(type_test_labels, type_latest_test_net_prob_out)
-                print "(", prec, rec, f1, "),",
+                print("(", prec, rec, f1, "),", end=' ')
                 tot_prec += prec
                 tot_rec += rec
                 tot_f1 += f1
-            print
-            print "Avg prec, rec, f1:", tot_prec/len(self.test_labels[0]), tot_rec/len(self.test_labels[0]), tot_f1/len(self.test_labels[0])
+            print()
+            print("Avg prec, rec, f1:", tot_prec/len(self.test_labels[0]), tot_rec/len(self.test_labels[0]), tot_f1/len(self.test_labels[0]))
         else:
             #if 
             epoch_acc, pos_acc, neg_acc = self.calc_totalacc_pos_and_neg(self.test_labels, self.latest_test_net_prob_out)
             self.update_test_acc_per_epoch_dict()
-            print "Prec, rec, f1:", compute_precision_recall_f1(self.test_labels, self.latest_test_net_prob_out)
+            print("Prec, rec, f1:", compute_precision_recall_f1(self.test_labels, self.latest_test_net_prob_out))
         self.test_acc_per_epoch.append(epoch_acc)
         self.test_pos_acc_per_epoch.append(pos_acc)
         self.test_neg_acc_per_epoch.append(neg_acc)
-        print "Latest test accuracy:", epoch_acc
+        print("Latest test accuracy:", epoch_acc)
         self.test_acc_txt_file =  open(self.test_acc_txt_filename, 'a')
         if self.num_labels > 1:
             epoch_acc_str = ""
@@ -277,7 +277,7 @@ class DeepLearningModule(object):
 
     def update_test_acc_per_epoch_dict(self):
         correct_per_obj_class = {obj_class: 0 for obj_class in self.obj_types}
-        for i in xrange(len(self.test_labels)):
+        for i in range(len(self.test_labels)):
             #if abs(self.test_labels[i]-self.latest_test_net_prob_out[i]) < 0.5:
             if (self.test_labels[i]==0 and self.latest_test_net_prob_out[i] < 0.5) or (self.test_labels[i]==1 and self.latest_test_net_prob_out[i] >= 0.5):
                 correct_per_obj_class[self.obj_type_dict[self.test_obj_names[i]]] += 1
@@ -295,7 +295,7 @@ class DeepLearningModule(object):
 
     def update_plots(self):
         if len(self.latest_test_net_prob_out)==0:
-            print "CANNOT PLOT WITHOUT NETWORK OUTPUT"
+            print("CANNOT PLOT WITHOUT NETWORK OUTPUT")
             return
 
         #TODO(mcorsaro): do this for multilabel..
@@ -316,10 +316,10 @@ class DeepLearningModule(object):
             grasp_type_indices = None
             grasp_types = self.grasp_types
             if self.num_labels == 2:
-                grasp_type_indices = range(len(self.test_labels[0]))
+                grasp_type_indices = list(range(len(self.test_labels[0])))
                 grasp_types = [type_i for type_i in self.grasp_types if "basic" in type_i]
             elif self.num_labels == 5:
-                grasp_type_indices = range(5)
+                grasp_type_indices = list(range(5))
             for grasp_i in grasp_type_indices:
                 type_train_accs = [acc[grasp_i] for acc in self.train_acc_per_epoch]
                 type_train_accs_pos = [acc[grasp_i] for acc in self.train_pos_acc_per_epoch]
@@ -411,9 +411,9 @@ class DeepLearningModule(object):
             plt.plot([0, endx], [1, 1], color='darkorange', lw=lw, linestyle='--')
 
             for obj_class in self.test_accs_per_objclass_per_epoch:
-                plt.plot(range(len(self.test_accs_per_objclass_per_epoch[obj_class])), self.test_accs_per_objclass_per_epoch[obj_class], lw=lw, label='{}: {}'.format(obj_class, self.test_ex_per_obj_class[obj_class]))
+                plt.plot(list(range(len(self.test_accs_per_objclass_per_epoch[obj_class]))), self.test_accs_per_objclass_per_epoch[obj_class], lw=lw, label='{}: {}'.format(obj_class, self.test_ex_per_obj_class[obj_class]))
 
-            plt.plot(range(len(self.test_acc_per_epoch)), self.test_acc_per_epoch, lw=lw, label="Total: {}".format(self.single_label_test_num_neg_ex + self.single_label_test_num_pos_ex))
+            plt.plot(list(range(len(self.test_acc_per_epoch))), self.test_acc_per_epoch, lw=lw, label="Total: {}".format(self.single_label_test_num_neg_ex + self.single_label_test_num_pos_ex))
             plt.xlabel('Epoch')
             plt.ylabel('acc (Avg init: ' + init_acc_str + ', max: ' + max_acc_str + ' at ' + str(max_acc_index) + ')')
             plt.title('Accuracy per object class vs. epoch')
@@ -443,7 +443,7 @@ class DeepLearningModule(object):
             plt.savefig(save_path)
             plt.close()
         else:
-            print "At least 2 points are needed to compute area under curve. You gave:", self.true_pos_rates.shape, self.false_pos_rates.shape, self.true_pos_rates, self.false_pos_rates
+            print("At least 2 points are needed to compute area under curve. You gave:", self.true_pos_rates.shape, self.false_pos_rates.shape, self.true_pos_rates, self.false_pos_rates)
 
     def plot_prec_vs_acc(self, epoch):
         save_path = self.output_path + "/prec_vs_acc.jpg"
@@ -490,7 +490,7 @@ class DeepLearningModule(object):
         if len(data) > 1:
             save_path = self.output_path + '/' + name.replace(' ', '_').lower() + "_per_epoch.jpg"
             plt.figure(figsize=(20,10))
-            plt.plot(range(len(data)), data, color='blue', lw=2, label=name)
+            plt.plot(list(range(len(data))), data, color='blue', lw=2, label=name)
             plt.xlim([0.0, len(data)-1])
             plt.ylim([0.0, max(data)+1])
             plt.xlabel('Epoch')
@@ -507,7 +507,7 @@ class DeepLearningModule(object):
             plt.close()
 
     def plot_training_loss(self):
-        print "Latest training loss:", self.train_loss_per_epoch[-1]
+        print("Latest training loss:", self.train_loss_per_epoch[-1])
         self.plot_vs_epoch(self.train_loss_per_epoch, "Average batch training loss")
 
     def plot_times(self):
@@ -516,7 +516,7 @@ class DeepLearningModule(object):
 
     def plot_obj_dists(self):
         save_path = self.output_path + "/train_test_dist.jpg"
-        objct_list = list(set(self.train_objct_dist.keys() + self.test_objct_dist.keys()))
+        objct_list = list(set(list(self.train_objct_dist.keys()) + list(self.test_objct_dist.keys())))
         objs = [objct for objct in objct_list]
         objs.sort()
 
@@ -581,7 +581,7 @@ def acc_subplot(ax, accuracies_list, colors, legend_entries, yaxis, title):
     ax.set_ylim([0.0, 1.05])
     ax.plot([0, endx], [1, 1], color='darkorange', lw=lw, linestyle='--')
     for line_i in range(len(colors)):
-        ax.plot(range(len(accuracies_list[line_i])), accuracies_list[line_i], color=colors[line_i], lw=lw, label=legend_entries[line_i])
+        ax.plot(list(range(len(accuracies_list[line_i]))), accuracies_list[line_i], color=colors[line_i], lw=lw, label=legend_entries[line_i])
     ax.set_xlabel('Epoch')
     ax.set_ylabel(yaxis)
     ax.set_title(title)
@@ -598,9 +598,9 @@ def plot_and_save_train_and_test_accs(train_accuracies_list, test_accuracies_lis
         len(color_list) != len(test_legend_entries) or \
         len(color_list) == 0:
 
-        print "Length of values to plot of are of different sizes, not generating a plot."
-        print len(train_accuracies_list), len(test_accuracies_list), len(color_list), len(train_legend_entries), \
-            len(test_legend_entries)
+        print("Length of values to plot of are of different sizes, not generating a plot.")
+        print(len(train_accuracies_list), len(test_accuracies_list), len(color_list), len(train_legend_entries), \
+            len(test_legend_entries))
         throw()
     for i in range(len(color_list)):
         if len(train_accuracies_list[i]) <= 1 or len(test_accuracies_list[i]) <= 1:
